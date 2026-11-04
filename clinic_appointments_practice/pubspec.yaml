@@ -1,0 +1,8 @@
+name: clinic_appointments_practice
+description: Clinic appointments practice project (Week 4 test re-attempt).
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dev_dependencies:
+  test: ^1.24.0

@@ -1,0 +1,20 @@
+# Dart & Flutter
+.dart_tool/
+.packages
+build/
+coverage/
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and crash dumps
+*.log
