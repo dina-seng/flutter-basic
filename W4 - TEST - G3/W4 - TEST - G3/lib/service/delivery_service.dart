@@ -14,15 +14,23 @@ class DeliveryService {
     if (_findParcelOrNull(parcelId) != null) {
       throw Exception('Parcel $parcelId already exists');
     }
-    parcels.add(Parcel(id: parcelId, destination: destination, weightKg: weightKg));
+    parcels.add(
+        Parcel(id: parcelId, destination: destination, weightKg: weightKg));
   }
 
-  void addTruck({required String truckId, required int maxParcels}) {
+  void addTruck(
+      {required String truckId,
+      required int maxParcels,
+      required int maxWeightKg}) {
+    if (maxWeightKg < 0) {
+      throw Exception('Weight Must be greater than 0');
+    }
     // ! Truck shall not exist already
     if (_findTruckOrNull(truckId) != null) {
       throw Exception('Truck $truckId already exists');
     }
-    trucks.add(Truck(id: truckId, maxParcels: maxParcels));
+    trucks.add(
+        Truck(id: truckId, maxParcels: maxParcels, maxWeightKg: maxWeightKg));
   }
 
   void loadParcel({required String parcelId, required String truckId}) {
@@ -36,6 +44,10 @@ class DeliveryService {
     Truck? truck = _findTruckOrNull(truckId);
     if (truck == null) {
       throw Exception('Truck $truckId not found');
+    }
+
+    if (truck.currentWeightKg + parcel.weightKg > truck.maxWeightKg) {
+      throw Exception('Truck is full');
     }
 
     // ! Parcel shall not be loaded in a truck already
