@@ -28,8 +28,7 @@ void main() {
     );
   });
 
-  test('a customer can book different movies but not the same movie twice',
-      () {
+  test('a customer can book different movies but not the same movie twice', () {
     final cinemaService = CinemaService();
     cinemaService.addCustomer(customerId: 'C1', customerName: 'Dara', age: 20);
     cinemaService.addMovie(movieId: 'M1', title: 'Inside Out', seats: 5);
@@ -45,4 +44,35 @@ void main() {
   });
 
   // TODO Q3: add your 2 tests here
+
+  test('Valid Booking limit case', () {
+    final cinemaService = CinemaService();
+
+    cinemaService.addCustomer(customerId: 'C1', customerName: 'Dara', age: 16);
+    cinemaService.addMovie(movieId: 'M1', title: 'Inside Out', seats: 5);
+    cinemaService.addMovie(movieId: 'M2', title: 'Up', seats: 5);
+
+    cinemaService.bookTicket(customerId: 'C1', movieId: 'M1');
+    expect(cinemaService.movies.first.audience.length, equals(1));
+  });
+
+  test('Invalid Update', () {
+    final cinemaService = CinemaService();
+
+    cinemaService.addCustomer(customerId: 'C1', customerName: 'Dara', age: 17);
+
+    cinemaService.addCustomer(customerId: 'C2', customerName: 'Dara', age: 17);
+
+    cinemaService.addMovie(
+        movieId: 'M1', title: 'Inside Out', seats: 5, minAge: 15);
+
+    cinemaService.bookTicket(customerId: 'C1', movieId: 'M1');
+
+    expect(() => cinemaService.updateMinAge(movieId: 'M1', minAge: 18),
+        throwsException);
+
+    final movie = cinemaService.movies.firstWhere((m) => m.id == 'M1');
+
+    expect(movie.minAge, equals(15));
+  });
 }
