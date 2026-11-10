@@ -60,6 +60,39 @@ class AppointmentService {
     appointments.add(Appointment(patient: patient, doctor: doctor, hour: hour));
   }
 
+  void cancelAppointment(
+      {required String patientId,
+      required String doctorId,
+      required int hour}) {
+    // ! Patient shall exist
+    Patient? patient = _findPatientOrNull(patientId);
+    if (patient == null) {
+      throw Exception('Patient $patientId not found');
+    }
+
+    // ! Doctor shall exist
+    Doctor? doctor = _findDoctorOrNull(doctorId);
+    if (doctor == null) {
+      throw Exception('Doctor $doctorId not found');
+    }
+
+    // ! Hour shall be within opening hours (last appointment starts at 16)
+    if (hour < openingHour || hour >= closingHour) {
+      throw Exception('Hour $hour is outside opening hours');
+    }
+
+    for (Appointment a in appointments) {
+      if (a.patient.id == patientId &&
+          a.doctor.id == doctorId &&
+          a.hour == hour &&
+          a.isActive) {
+        a.status = AppointmentStatus.cancelled;
+      } else {
+        throw Exception('FAKKK hard');
+      }
+    }
+  }
+
   Doctor? _findDoctorOrNull(String doctorId) {
     for (Doctor d in doctors) {
       if (d.id == doctorId) return d;
@@ -76,14 +109,15 @@ class AppointmentService {
 
   bool _isDoctorBusy(String doctorId, int hour) {
     for (Appointment a in appointments) {
-      if (a.doctor.id == doctorId && a.hour == hour) return true;
+      if (a.doctor.id == doctorId && a.hour == hour && a.isActive) return true;
     }
     return false;
   }
 
   bool _isPatientBusy(String patientId, int hour) {
     for (Appointment a in appointments) {
-      if (a.patient.id == patientId && a.hour == hour) return true;
+      if (a.patient.id == patientId && a.hour == hour && a.isActive)
+        return true;
     }
     return false;
   }

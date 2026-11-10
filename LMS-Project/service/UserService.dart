@@ -1,6 +1,6 @@
 import '../model/User.dart';
 
-class Userservice {
+class UserService {
   List<User> users = [];
 
   void createUser(String name, String email, Role role) {
@@ -69,7 +69,7 @@ class Userservice {
     return null;
   }
 
-  bool _emailExists(String email) {
+  bool IsEmailExists(String email) {
     for (User user in users) {
       if (email == user.userEmail) {
         return true;

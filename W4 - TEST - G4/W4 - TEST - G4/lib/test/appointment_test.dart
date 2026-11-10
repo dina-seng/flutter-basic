@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:test/test.dart';
 
 import '../service/appointment_service.dart';
@@ -8,7 +10,8 @@ void main() {
     appointmentService.addPatient(patientId: 'P1', patientName: 'Dara');
     appointmentService.addDoctor(doctorId: 'D1', doctorName: 'Dr. Sok');
 
-    appointmentService.bookAppointment(patientId: 'P1', doctorId: 'D1', hour: 9);
+    appointmentService.bookAppointment(
+        patientId: 'P1', doctorId: 'D1', hour: 9);
 
     expect(appointmentService.appointments.length, 1);
     expect(appointmentService.appointments.first.patient.name, 'Dara');
@@ -20,7 +23,8 @@ void main() {
     appointmentService.addDoctor(doctorId: 'D1', doctorName: 'Dr. Sok');
 
     expect(
-      () => appointmentService.bookAppointment(patientId: 'P1', doctorId: 'D1', hour: 17),
+      () => appointmentService.bookAppointment(
+          patientId: 'P1', doctorId: 'D1', hour: 17),
       throwsException,
     );
   });
@@ -31,13 +35,52 @@ void main() {
     appointmentService.addPatient(patientId: 'P2', patientName: 'Sokha');
     appointmentService.addDoctor(doctorId: 'D1', doctorName: 'Dr. Sok');
 
-    appointmentService.bookAppointment(patientId: 'P1', doctorId: 'D1', hour: 9);
+    appointmentService.bookAppointment(
+        patientId: 'P1', doctorId: 'D1', hour: 9);
 
     expect(
-      () => appointmentService.bookAppointment(patientId: 'P2', doctorId: 'D1', hour: 9),
+      () => appointmentService.bookAppointment(
+          patientId: 'P2', doctorId: 'D1', hour: 9),
       throwsException,
     );
   });
 
   // TODO Q3: add your 2 tests here
+
+  test('Valid Schenario', () {
+    final appointmentService = AppointmentService();
+    appointmentService.addPatient(patientId: 'P1', patientName: 'Dara');
+    appointmentService.addPatient(patientId: 'P2', patientName: 'Sokha');
+    appointmentService.addDoctor(doctorId: 'D1', doctorName: 'Dr. Sok');
+
+    appointmentService.bookAppointment(
+        patientId: 'P1', doctorId: 'D1', hour: 9);
+    appointmentService.cancelAppointment(
+        patientId: 'P1', doctorId: 'D1', hour: 9);
+
+    appointmentService.bookAppointment(
+        patientId: 'P2', doctorId: 'D1', hour: 9);
+
+    final patient2 =
+        appointmentService.appointments.where((a) => a.patient.id == 'P2');
+    // expect(appointmentService.appointments.length, 1);
+    expect(patient2.first.patient.id, 'P2');
+  });
+
+  test('Invalid Scenario', () {
+    final appointmentService = AppointmentService();
+    appointmentService.addPatient(patientId: 'P1', patientName: 'Dara');
+    appointmentService.addPatient(patientId: 'P2', patientName: 'Sokha');
+    appointmentService.addDoctor(doctorId: 'D1', doctorName: 'Dr. Sok');
+
+    appointmentService.bookAppointment(
+        patientId: 'P1', doctorId: 'D1', hour: 9);
+    appointmentService.cancelAppointment(
+        patientId: 'P1', doctorId: 'D1', hour: 9);
+
+    expect(
+        () => appointmentService.cancelAppointment(
+            patientId: 'P1', doctorId: 'D1', hour: 9),
+        throwsException);
+  });
 }

@@ -15,7 +15,7 @@ class User {
 
   String get userID => userID;
 
-  bool isInstructor() => userRole == Role.INSTRUCTOR;
+  bool get isInstructor => userRole == Role.INSTRUCTOR;
 
   @override
   String toString() {
