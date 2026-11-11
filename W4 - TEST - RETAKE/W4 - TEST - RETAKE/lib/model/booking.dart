@@ -36,12 +36,13 @@ class Booking {
   Court court;
 
   String customerName;
+  String courtId;
   TimeSlot status;
 
   Booking({
-    required this.customerName,
-    required this.court,
-    required  this.status,
+    required String customerName,
+    required Court courtId = court.id,
+    required TimeSlot status,
   });
 
   int get price => status.price;
